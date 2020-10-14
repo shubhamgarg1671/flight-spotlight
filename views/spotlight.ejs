@@ -68,7 +68,7 @@
             </div>
         </div>
     </div>
-
+    <script src="circle.js"></script>
     <script type="text/javascript">
         var socketHost = location.origin.replace(/^http/, 'ws');
         let list = document.getElementById("latest-status");
@@ -138,7 +138,7 @@
                                 for (var i = 0; i < p.length; i++) {
                                     p[i].polygon.height = geo_fence_heights[1]; // or height property
                                     p[i].polygon.extrudedHeight = geo_fence_heights[
-                                    0]; // or height property
+                                        0]; // or height property
                                     p[i].polygon.outlineColor = Cesium.Color.PINK.withAlpha(0.2),
                                         p[i].polygon.material = Cesium.Color.HOTPINK.withAlpha(0.2)
                                 }
@@ -195,7 +195,54 @@
         function submitHandler(e) {
             e.preventDefault();
             var data = {};
+            //var coordinates = 
+            var coordinates = document.getElementById('geo_polygon_string').value;
+            console.log(typeof coordinates);
+            let geo_json = circleToPolygon(JSON.parse(coordinates), 1000, 64);
+            /*let geo_json = {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "type": "Feature",
+                        "properties": {},
+                        "geometry": {
+                            "type": "Polygon",
+                            "coordinates": [
+                                [
+                                    [
+                                        0.3680419921875,
+                                        20.117839630491634
+                                    ],
+                                    [
+                                        0.72509765625,
+                                        20.117839630491634
+                                    ],
+                                    [
+                                        0.72509765625,
+                                        20.31887233939871
+                                    ],
+                                    [
+                                        0.3680419921875,
+                                        20.31887233939871
+                                    ],
+                                    [
+                                        0.3680419921875,
+                                        20.117839630491634
+                                    ]
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }*/
+            geo_json = JSON.stringify(geo_json);
+            /*console.log(geo_json_);
             let geo_json = document.getElementById('geo_polygon_string').value;
+            console.log(geo_json);
+            if (geo_json!==JSON.stringify(geo_json_))
+            {
+                console.log('there is a difference in geojsons');
+            }*/
             data['geo_json'] = geo_json;
             data['email'] = email;
 
@@ -234,19 +281,19 @@
         fd_button.on('click', get_flight_declarations);
 
         function render_declaration_info(flight_declaration) {
-                       
-            let html = '';  
+
+            let html = '';
             html += flight_declaration['flight_declaration']['originating_party'] + '  ';
-            html += 'Type: ' + flight_declaration['flight_declaration']['operation_mode']+ '  ';
-            html += 'Purpose: ' + flight_declaration['flight_declaration']['purpose'];            
-            
-            let fd_div = document.createTextNode(html); 
+            html += 'Type: ' + flight_declaration['flight_declaration']['operation_mode'] + '  ';
+            html += 'Purpose: ' + flight_declaration['flight_declaration']['purpose'];
+
+            let fd_div = document.createTextNode(html);
 
             return fd_div;
         }
 
         function show_flight_declarations(flight_declarations) {
-            const results_list = document.getElementById('search-results');    
+            const results_list = document.getElementById('search-results');
             results_list.innerHTML = "";
             flight_declarations.forEach(flight_declaration => {
                 results_list.appendChild(render_declaration_info(flight_declaration));
@@ -260,10 +307,10 @@
             for (var i = 0; i < 360; i++) {
                 var radians = Cesium.Math.toRadians(i);
                 positions.push(
-                new Cesium.Cartesian2(
-                    radius * Math.cos(radians),
-                    radius * Math.sin(radians)
-                )
+                    new Cesium.Cartesian2(
+                        radius * Math.cos(radians),
+                        radius * Math.sin(radians)
+                    )
                 );
             }
             return positions;
@@ -292,21 +339,21 @@
                         // render fd_geo_json
                         let degree_array_heights = [];
                         for (let feature_counter = 0; feature_counter < fd_geo_json.features.length; feature_counter++) {
-                            
+
                             const feature = fd_geo_json.features[feature_counter];
-                            let coords = feature.geometry.coordinates;       
+                            let coords = feature.geometry.coordinates;
                             let max_altitude = feature['properties']['max_altitude']['metres'];
-                            let min_altitude = feature['properties']['min_altitude']['metres'];                            
-                            let mean_altitude = ((max_altitude + min_altitude)/2);
+                            let min_altitude = feature['properties']['min_altitude']['metres'];
+                            let mean_altitude = ((max_altitude + min_altitude) / 2);
                             for (let coord_counter = 0; coord_counter < coords.length; coord_counter++) {
                                 const cur_coord = coords[coord_counter];
                                 degree_array_heights.push(cur_coord[0]);
                                 degree_array_heights.push(cur_coord[1]);
-                                degree_array_heights.push(mean_altitude);                                
+                                degree_array_heights.push(mean_altitude);
                             }
                         }
 
-                        var flight_box = viewer.entities.add({                            
+                        var flight_box = viewer.entities.add({
                             polylineVolume: {
                                 positions: Cesium.Cartesian3.fromDegreesArrayHeights(degree_array_heights),
                                 shape: computeCircle(50.0),

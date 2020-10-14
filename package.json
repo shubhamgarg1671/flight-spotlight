@@ -34,6 +34,7 @@
         "@turf/intersect": "^6.1.3",
         "async": "^1.5.2",
         "body-parser": "^1.19.0",
+        "circle-to-polygon": "^2.0.2",
         "compression": "^1.6.1",
         "cookie-parser": "^1.4.4",
         "debug": "~4.1.1",
@@ -49,10 +50,10 @@
         "morgan": "~1.9.0",
         "passport": "^0.4.1",
         "passport-oauth2": "^1.5.0",
+        "redis": "^3.0.2",
         "request": "^2.88.2",
         "requirejs": "^2.2.0",
         "socket.io": "^2.0.4",
-        "tile38": "^0.7.0",
-        "redis": "^3.0.2"
+        "tile38": "^0.7.0"
     }
 }
