@@ -44,6 +44,19 @@
                             <button class="button" id="retrive_flights" type="submit">Stream flights</button>
                         </div>
                     </form>
+                    <br>
+                    <br>
+                    <form id="dss-query-form-coor" method="post" action="/spotlight">
+                        <!-- <label for="geo_polygon_string">Area of Interest</label><br> -->
+                        <textarea rows="4" cols="20" id="geo_polygon_string_coor" value="<%= data.geo_polygon_string_coor %>"
+                            name="geo_polygon_string_coor"
+                            placeholder="Paste a valid Array of coordinates here [log, lat]"></textarea>
+
+                        <br>
+                        <div class="form-actions">
+                            <button class="button" id="retrive_flights_coor" type="submit">Stream flights</button>
+                        </div>
+                    </form>
 
                     <div class="d-none loading-spinner" id="spinner-cont"><br>
                         <img src="/assets/img/spinner.gif" height="30px">
@@ -192,57 +205,31 @@
         const dss_form = $('#dss-query-form');
         dss_form.on('submit', submitHandler);
 
+        const dss_form_coor = $('#dss-query-form-coor');
+        dss_form_coor.on('submit', submitHandler);
+
         function submitHandler(e) {
             e.preventDefault();
             var data = {};
-            //var coordinates = 
-            var coordinates = document.getElementById('geo_polygon_string').value;
-            console.log(typeof coordinates);
-            let geo_json = circleToPolygon(JSON.parse(coordinates), 1000, 64);
-            /*let geo_json = {
-                "type": "FeatureCollection",
-                "features": [
-                    {
-                        "type": "Feature",
-                        "properties": {},
-                        "geometry": {
-                            "type": "Polygon",
-                            "coordinates": [
-                                [
-                                    [
-                                        0.3680419921875,
-                                        20.117839630491634
-                                    ],
-                                    [
-                                        0.72509765625,
-                                        20.117839630491634
-                                    ],
-                                    [
-                                        0.72509765625,
-                                        20.31887233939871
-                                    ],
-                                    [
-                                        0.3680419921875,
-                                        20.31887233939871
-                                    ],
-                                    [
-                                        0.3680419921875,
-                                        20.117839630491634
-                                    ]
-                                ]
-                            ]
-                        }
-                    }
-                ]
-            }*/
-            geo_json = JSON.stringify(geo_json);
-            /*console.log(geo_json_);
-            let geo_json = document.getElementById('geo_polygon_string').value;
-            console.log(geo_json);
-            if (geo_json!==JSON.stringify(geo_json_))
-            {
-                console.log('there is a difference in geojsons');
-            }*/
+            let geo_json;
+            
+            var geo_json_input = document.getElementById('geo_polygon_string').value;   
+            var coordinates = document.getElementById('geo_polygon_string_coor').value;
+
+            if (geo_json_input === '') {
+                
+                geo_json = circleToPolygon(JSON.parse(coordinates), 1000, 64);
+                geo_json = JSON.stringify(geo_json);
+                coordinates = '';
+            } else {
+                geo_json = geo_json_input;
+                geo_json_input = '';
+            }
+            
+            /* To remove the input from textbox after the button is clicked. */
+            document.getElementById('geo_polygon_string').value = "";
+            document.getElementById('geo_polygon_string_coor').value = "";
+            
             data['geo_json'] = geo_json;
             data['email'] = email;
 

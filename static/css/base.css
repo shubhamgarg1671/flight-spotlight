@@ -90,6 +90,14 @@ textarea#geo_polygon_string {
     width: 100%;
 }
 
+textarea#geo_polygon_string_coor {    
+    font-family: 'Karla', sans-serif;
+    height: 100px;    
+    padding: 5px;
+    display: block;
+    width: 100%;
+}
+
 .button {
     background-color: #4CAF50;
     /* Green */
