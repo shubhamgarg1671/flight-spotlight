@@ -48,10 +48,11 @@
                     <br>
                     <form id="dss-query-form-coor" method="post" action="/spotlight">
                         <!-- <label for="geo_polygon_string">Area of Interest</label><br> -->
-                        <textarea rows="4" cols="20" id="geo_polygon_string_coor" value="<%= data.geo_polygon_string_coor %>"
-                            name="geo_polygon_string_coor"
-                            placeholder="Paste a valid Array of coordinates here [log, lat]"></textarea>
-
+                        <textarea rows="4" cols="20" id="geo_polygon_string_coor"
+                            value="<%= data.geo_polygon_string_coor %>" name="geo_polygon_string_coor"
+                            placeholder="Array of coordinates of center [log, lat]"></textarea>
+                        <br>
+                        <input type="number" placeholder="Enter radius (in metres)" id="radius">
                         <br>
                         <div class="form-actions">
                             <button class="button" id="retrive_flights_coor" type="submit">Stream flights</button>
@@ -216,9 +217,10 @@
             var geo_json_input = document.getElementById('geo_polygon_string').value;   
             var coordinates = document.getElementById('geo_polygon_string_coor').value;
 
+            var radius = parseInt(document.getElementById('radius').value) || 1000;
             if (geo_json_input === '') {
                 
-                geo_json = circleToPolygon(JSON.parse(coordinates), 1000, 64);
+                geo_json = circleToPolygon(JSON.parse(coordinates), radius, 64);
                 geo_json = JSON.stringify(geo_json);
                 coordinates = '';
             } else {
@@ -229,7 +231,8 @@
             /*To remove the input from textbox after the button is clicked */
             document.getElementById('geo_polygon_string').value = "";
             document.getElementById('geo_polygon_string_coor').value = "";
-            
+            document.getElementById('radius').value = undefined;
+
             data['geo_json'] = geo_json;
             data['email'] = email;
 
