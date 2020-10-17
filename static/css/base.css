@@ -89,7 +89,6 @@ textarea#geo_polygon_string {
     display: block;
     width: 100%;
 }
-
 textarea#geo_polygon_string_coor {    
     font-family: 'Karla', sans-serif;
     height: 100px;    
